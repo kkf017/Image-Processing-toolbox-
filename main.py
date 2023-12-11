@@ -3,7 +3,6 @@ import sys
 import numpy
 import matplotlib.image as mpimg
 
-
 sys.path.insert(1,'./module/')
 
 from display import *
@@ -12,9 +11,6 @@ from histogram import *
 from filter import *
 
 from typing import List
-
-
-# STreamlit (website)
 
 
 def main(argv:List[str], argc:int)->None:
