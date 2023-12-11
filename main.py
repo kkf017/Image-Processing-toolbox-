@@ -3,6 +3,9 @@ import sys
 import numpy
 import matplotlib.image as mpimg
 
+
+sys.path.insert(1,'./module/')
+
 from display import *
 from transform import *
 from histogram import *
