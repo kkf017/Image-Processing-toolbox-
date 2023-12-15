@@ -13,9 +13,8 @@ def fourier(img:numpy.ndarray)->None:
             img - image
         Output:
             None
-        Other.
-    		# https://docs.scipy.org/doc/scipy/tutorial/fft.html#and-n-d-discrete-fourier-transforms
-    		# https://numpy.org/doc/stable/reference/routines.fft.html
+    # https://docs.scipy.org/doc/scipy/tutorial/fft.html#and-n-d-discrete-fourier-transforms
+    # https://numpy.org/doc/stable/reference/routines.fft.html
     """
     x = scipy.fft.fftn(img)
     x = scipy.fft.fftshift(x)
@@ -194,7 +193,88 @@ def GaussianHighPassFilter(img:numpy.ndarray, sigma:float)->numpy.ndarray:
            H[u,v] = 1-gaussian(u,v)
     return H
 
-def LaplacianFilter(img:numpy.ndarray, c:float)->numpy.ndarray:
+
+def HomomorphicFilter(img:numpy.ndarray, D0:int, Hgamma:float, Lgamma:float, c:float)->numpy.ndarray:
+    """
+        Function that returns a homorphic filter.
+        Input:
+            img - image
+            D0 - cutoff frequency
+            c - constant
+            gammah, gammal - dynamic range (gammaH, gammaL)
+        Output:
+            filter
+        Other.
+            H(u,v) = (gammaH - gammaL) (1 - exp(-(c*D(u,v)**2) / D0**2)) + gammaL
+    """
+    P = img.shape[0]
+    Q = img.shape[1]
+    D = lambda u,v: numpy.sqrt((u-P/2)**2 + (v-Q/2)**2)
+    fgauss = lambda u, v: numpy.exp(-c*D(u,v)**2 / D0**2)
+
+    H = numpy.zeros((P,Q))
+    for u in range(P):
+        for v in range(Q):
+           H[u,v] = (Hgamma-Lgamma) * (1-fgauss(u,v)) + Lgamma
+    return H
+
+def BandrejectFilter(img:numpy.ndarray, D0:float, W:float, filters:str, args:Tuple[Any])->numpy.ndarray:
+    """
+        Function that returns bandreject filter.
+        Input:
+            img - image
+            D0 - cutoff frequency
+            W - width of the band
+            filters - type of filter
+            *args - parameters (optional)
+        Output:
+            filter
+    """
+    P = img.shape[0]
+    Q = img.shape[1]
+    D = lambda u,v: numpy.sqrt((u-P/2)**2 + (v-Q/2)**2)  
+
+    H = numpy.zeros((P,Q))
+
+    match filters:
+        case "ideal":
+            for u in range(P):
+                for v in range(Q):
+                    if D0-W/2<=D(u, v) and D(u,v)<=D0+W/2:
+                        H[u,v] = 0
+                    else:
+                        H[u,v] = 1
+        case "butterworth":
+            n = int(args[0])
+            for u in range(P):
+                for v in range(Q):
+                    H[u,v] = 1 / (1 + (D(u,v)*W /(D(u,v)**2-D0**2))**(2*n) )
+        case "gauss":
+            for u in range(P):
+                for v in range(Q):
+                    H[u,v] = 1 - numpy.exp(- ((D(u,v)**2-D0**2) / (D(u,v)*W))**2)
+        case _:
+            raise Exception("\n[-]Error: Unknown type of filter.")
+    return H
+
+
+def BandpassFilter(img:numpy.ndarray, D0:float, W:float, filters:str, args:Tuple[Any])->numpy.ndarray:
+    """
+        Function that returns bandpass filter.
+        Input:
+            img - image
+            D0 - cutoff frequency
+            W - width of the band
+            filters - type of filter
+            *args - parameters (optional)
+        Output:
+            filter
+    """
+    return 1-BandrejectFilter(img, D0, W, filters, args)
+
+
+
+def LaplacianFilter(img:numpy.ndarray, c:int)->numpy.ndarray:
     """
         Function that returns an Gaussian Laplacian filter.
         Input:
@@ -210,14 +290,103 @@ def LaplacianFilter(img:numpy.ndarray, c:float)->numpy.ndarray:
     H = numpy.zeros((P,Q))
     for u in range(P):
         for v in range(Q):
-           H[u,v] = 1+c*(u**2+v**2)
-    return H
+           H[u,v] = -D(u,v)**2
+    
+    match len(img.shape):
+        case 2:
+            pass
+        case 3:
+            h = numpy.zeros((H.shape[0], H.shape[1], img.shape[2]))
+            for i in range(img.shape[2]):
+                h[:,:, i] = H  
+            H = h             
+        case _:
+            raise Exception("\n[-]Error: Unknown size of image.")
+    F = scipy.fft.fftn(img)
+    df = numpy.abs(H)*numpy.abs(F)* numpy.exp(1j*numpy.angle(F))
+    df = scipy.fft.ifftn(df) 
+    df = numpy.real(df)
+    g = img + c*df
+    #g = numpy.clip(g, 0, 255).astype(numpy.uint8)
+    return g
 
+
+def UnsharpMasking(img:numpy.ndarray, D0:int, k:int)->numpy.ndarray: 
+    """
+        Function that performs Unsharp Masking and Highboost filtering.
+        Input:
+            img - image
+            k - parameter
+                    k=1 - unsharp masking
+                    k>1 - highboost filtering
+        Output:
+            image
+    """
+    F = scipy.fft.fftn(img)
+    H = IdealLowPassFilter(img, D0) # IdealHighPassFilter(img, D0)
+    match len(img.shape):
+        case 2:
+            pass
+        case 3:
+            h = numpy.zeros((H.shape[0], H.shape[1], img.shape[2]))
+            for i in range(img.shape[2]):
+                h[:,:, i] = H  
+            H = h             
+        case _:
+            raise Exception("\n[-]Error: Unknown size of image.")
+    G = numpy.abs(H)*numpy.abs(F)* numpy.exp(1j*numpy.angle(F))
+    gmask = scipy.fft.ifftn(G) 
+    gmask = numpy.real(gmask)
+    #gmask = numpy.clip(gmask, 0, 255).astype(numpy.uint8)
+    g = img + k * gmask
+    #g = numpy.clip(g, 0, 255).astype(numpy.uint8)
+    return g
+
+
+def HighFreqEmph(img:numpy.ndarray, D0:int, k1:int, k2:int)->numpy.ndarray: 
+    """
+        Function that performs High-frequency emphasis.
+        Input:
+            img - image
+            k1, k2 - parameter
+                    k1 = 1
+                    k2=1 - unsharp masking
+                    k2>1 - highboost filtering
+        Output:
+            image
+    """
+    F = scipy.fft.fftn(img)
+    H = IdealLowPassFilter(img, D0) # IdealHighPassFilter(img, D0)
+    match len(img.shape):
+        case 2:
+            pass
+        case 3:
+            h = numpy.zeros((H.shape[0], H.shape[1], img.shape[2]))
+            for i in range(img.shape[2]):
+                h[:,:, i] = H  
+            H = h             
+        case _:
+            raise Exception("\n[-]Error: Unknown size of image.")
+    H = k1 +k2*H
+    G = numpy.abs(H)*numpy.abs(F)* numpy.exp(1j*numpy.angle(F))
+    y = scipy.fft.ifftn(G) 
+    y = numpy.real(y)
+    y = numpy.clip(y, 0, 255).astype(numpy.uint8)
+    return y
+
+
+def NotchFilter()->numpy.ndarray:
+    """
+        Function that ...
+        Input:
+        Output:
+    """
+    return None
 
 
 def ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])->numpy.ndarray: # mode:str
     """
-        Function that ...
+        Function that performs filtering.
         Input:
         Output:
     """
@@ -235,6 +404,15 @@ def ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])->numpy.ndarra
             H = ButterworthHighPassFilter(img, float(args[0]), float(args[0]))
         case "ghighpass":
             H = GaussianHighPassFilter(img, float(args[0]))
+        
+        case "bandreject":
+            H = BandrejectFilter(img, float(args[1]), float(args[2]), args[0], args[3:])
+        case "bandpass":
+            H = BandpassFilter(img, float(args[1]), float(args[2]), args[0], args[3:])
+
+        case "homomorphic":
+            H = HomomorphicFilter(img, float(args[0]), float(args[1]), float(args[2]), float(args[3]))
+           
         case _:
             raise Exception("\n[-]Error: Unknown type of filter.")
 
@@ -250,7 +428,7 @@ def ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])->numpy.ndarra
             raise Exception("\n[-]Error: Unknown size of image.")
 
     F = scipy.fft.fftn(img)
-    #x = scipy.fft.fftshift(x)
+    #F = scipy.fft.fftshift(F)
 
     Fphase = numpy.arctan2(numpy.imag(F),numpy.real(F))
 
@@ -265,6 +443,13 @@ def ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])->numpy.ndarra
 
 
 
+def ftcrosscorrelation(img:numpy.ndarray)->numpy.ndarray:
+    """
+        Function that ...
+        Input:
+        Output:
+    """
+    return img
 
 
 

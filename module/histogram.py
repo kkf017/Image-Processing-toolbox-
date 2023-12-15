@@ -119,7 +119,7 @@ def negative(img:numpy.ndarray)->numpy.ndarray:
         case 3:
             for i in range(img.shape[2]):
                 unique, counts = numpy.unique(img[:,:,i], return_counts=True)
-                x[:,:,i] = f(img[:,:,i], numpy.min(unique))           
+                x[:,:,i] = f(img[:,:,i], numpy.min(unique))          
         case _:
             raise Exception("\n[-]Error: Unknown size of image.")
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
