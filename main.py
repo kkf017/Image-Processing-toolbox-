@@ -9,6 +9,7 @@ from display import *
 from transform import *
 from histogram import *
 from filter import *
+from FT import *
 
 from typing import List
 
