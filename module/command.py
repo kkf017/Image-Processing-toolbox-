@@ -384,7 +384,6 @@ def help_()->None:
     print("\n\033[{}mCommand:- imgmagic img1 img2 [OPTION] [ARGS]".format("0;34"))
     print("\033[{}m\t with img1 img2 path of input/output image.".format("0;34"))
 
-   
     print("\n\033[{}m-g \tConvert RGB image to greyscale.".format("0;37"))
 
     print("\n\033[{}m-n [noise] [args] \tAdd noise to image. \n\twith \t[noise]: type of noise (gauss, snp).\n\t\t[args]: arguments. \n\t\t\t\tmean, sigma for gaussian noise \n\t\t\t\tprob for salt and pepper noise".format("0;37"))
