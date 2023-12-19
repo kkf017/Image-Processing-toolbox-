@@ -4,19 +4,7 @@ import numpy
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-
-
-def exists(filename:str)->None:
-    """
-        Function that check if a file exists.
-        Input:
-            filename - name of the file
-        Output:
-            None
-    """
-    filename =  os.path.abspath(filename)
-    if not os.path.exists(filename):
-        sys.exit("\n[-]Error: File does not exist.")
+from colors import *
 
 
 def greyscale(x: numpy.ndarray)->numpy.ndarray:
@@ -66,7 +54,7 @@ def display(x: numpy.ndarray, y:str)->None:
         case 3:
             plt.imshow(x)
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.") 
+            raise Exception(WARNINGIMAGESIZE) 
     plt.show()
 
 

@@ -4,6 +4,7 @@ import scipy
 
 from typing import Tuple, Any
 
+from colors import *
 
 
 def mse(x:numpy.ndarray, y: numpy.ndarray)->float:
@@ -47,7 +48,7 @@ def GaussianNoise(img:numpy.ndarray, mean:float, sigma:float)->numpy.ndarray:
             x[:,:,1] += noise
             x[:,:,2] += noise
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.")
+            raise Exception(WARNINGIMAGESIZE)
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
 
@@ -125,7 +126,7 @@ def filterAverage(n:int)->numpy.ndarray:
   
 
 
-def filterGaussian(sigma:float)->numpy.ndarray: 
+def filterGaussian()->numpy.ndarray: # sigma:float
     """
         Function that returns a gaussian filter.
         Input:
@@ -228,7 +229,7 @@ def padding(img:numpy.ndarray, types:str, n:int)->numpy.ndarray:
         case "mirror":
             pass
         case _:
-            raise Exception("\n[-]Error: Unknown type of padding.")
+            raise Exception(WARNINGPADDING)
     x = x[img.shape[0]-n:2*img.shape[0]+n, img.shape[1]-n:2*img.shape[1]+n]
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
@@ -259,7 +260,7 @@ def convolution(img:numpy.ndarray, filters:numpy.ndarray, mode:str)->numpy.ndarr
                     new[:,:,i] = filters 
                 filters = new               
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.")
+            raise Exception(WARNINGIMAGESIZE)
 
     for i in range(n):
         for j in range(m):
@@ -295,12 +296,12 @@ def filtering(img:numpy.ndarray, types:str, mode:str, *args: Tuple[Any])->numpy.
             filters = filterBandreject()
         case "bandpass":
             filters = filterBandpass()
-        case "average":
+        case "avg":
             filters = filterAverage(int(args[0]))
-        case "gaussian":
-            filters = filterGaussian(int(args[0]))
+        case "gauss":
+            filters = filterGaussian() #int(args[0]))
         case _:
-            raise Exception("\n[-]Error: Unknown type of filter.")
+            raise Exception(WARNINGFILTER)
 
     #x = convolution(img, filters, mode)
 
@@ -312,7 +313,7 @@ def filtering(img:numpy.ndarray, types:str, mode:str, *args: Tuple[Any])->numpy.
             for i in range(img.shape[2]):
                 x[:,:,i] = scipy.ndimage.convolve(img[:,:,i], filters, mode=mode)
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.")
+            raise Exception(WARNINGIMAGESIZE)
   
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
@@ -337,13 +338,13 @@ def sharpening(img:numpy.ndarray, types:str, mode:str)->numpy.ndarray:
         case "roberts":
             filters = filterRoberts()
         case _:
-            raise Exception("\n[-]Error: Unknown type of filter.")
+            raise Exception(WARNINGFILTER)
     x = convolution(img, filters, mode)
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
 
 
-def crosscorrelation(img:numpy.ndarray, sub:numpy.ndarray)->numpy.ndarray:
+def crosscorrelation(img:numpy.ndarray, filters:str, sub:numpy.ndarray)->numpy.ndarray:
     """
         Function that find a subimage in an image.
         Input:
@@ -358,8 +359,8 @@ def crosscorrelation(img:numpy.ndarray, sub:numpy.ndarray)->numpy.ndarray:
 
     img = 0.2989 * img[:,:,0] + 0.5870 * img[:,:,1] + 0.1140 * img[:,:,2]
     sub = 0.2989 * sub[:,:,0] + 0.5870 * sub[:,:,1] + 0.1140 * sub[:,:,2]
-    img = sharpening(img, "laplacian", "constant") 
-    sub = sharpening(sub, "laplacian", "constant") 
+    img = sharpening(img, filters, "constant") 
+    sub = sharpening(sub, filters, "constant") 
 
     # padding
 

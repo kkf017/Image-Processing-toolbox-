@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 from typing import Tuple, Any
 
+from colors import *
 
 
 def fourier(img:numpy.ndarray)->None:
@@ -13,8 +14,6 @@ def fourier(img:numpy.ndarray)->None:
             img - image
         Output:
             None
-    # https://docs.scipy.org/doc/scipy/tutorial/fft.html#and-n-d-discrete-fourier-transforms
-    # https://numpy.org/doc/stable/reference/routines.fft.html
     """
     x = scipy.fft.fftn(img)
     x = scipy.fft.fftshift(x)
@@ -254,7 +253,7 @@ def BandrejectFilter(img:numpy.ndarray, D0:float, W:float, filters:str, args:Tup
                 for v in range(Q):
                     H[u,v] = 1 - numpy.exp(- ((D(u,v)**2-D0**2) / (D(u,v)*W))**2)
         case _:
-            raise Exception("\n[-]Error: Unknown type of filter.")
+            raise Exception(WARNINGFTFILTER)
     return H
 
 
@@ -301,7 +300,7 @@ def LaplacianFilter(img:numpy.ndarray, c:int)->numpy.ndarray:
                 h[:,:, i] = H  
             H = h             
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.")
+            raise Exception(WARNINGIMAGESIZE)
     F = scipy.fft.fftn(img)
     df = numpy.abs(H)*numpy.abs(F)* numpy.exp(1j*numpy.angle(F))
     df = scipy.fft.ifftn(df) 
@@ -333,13 +332,13 @@ def UnsharpMasking(img:numpy.ndarray, D0:int, k:int)->numpy.ndarray:
                 h[:,:, i] = H  
             H = h             
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.")
+            raise Exception(WARNINGIMAGESIZE)
     G = numpy.abs(H)*numpy.abs(F)* numpy.exp(1j*numpy.angle(F))
     gmask = scipy.fft.ifftn(G) 
     gmask = numpy.real(gmask)
     #gmask = numpy.clip(gmask, 0, 255).astype(numpy.uint8)
     g = img + k * gmask
-    #g = numpy.clip(g, 0, 255).astype(numpy.uint8)
+    g = numpy.clip(g, 0, 255).astype(numpy.uint8)
     return g
 
 
@@ -366,7 +365,7 @@ def HighFreqEmph(img:numpy.ndarray, D0:int, k1:int, k2:int)->numpy.ndarray:
                 h[:,:, i] = H  
             H = h             
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.")
+            raise Exception(WARNINGIMAGESIZE)
     H = k1 +k2*H
     G = numpy.abs(H)*numpy.abs(F)* numpy.exp(1j*numpy.angle(F))
     y = scipy.fft.ifftn(G) 
@@ -388,7 +387,11 @@ def ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])->numpy.ndarra
     """
         Function that performs filtering.
         Input:
+            img - image
+            filters - type of filter {lowpass, blowpass, glowpass, highpass, bhighpass, ghighoass, bandreject, bandpass,homomorphic}
+            *args - (opt.)
         Output:
+            image (filtered)
     """
     # TERMINER !!! - case of padding (image)
     match filters:
@@ -414,7 +417,7 @@ def ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])->numpy.ndarra
             H = HomomorphicFilter(img, float(args[0]), float(args[1]), float(args[2]), float(args[3]))
            
         case _:
-            raise Exception("\n[-]Error: Unknown type of filter.")
+            raise Exception(WARNINGFTFILTER)
 
     match len(img.shape):
         case 2:
@@ -425,7 +428,7 @@ def ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])->numpy.ndarra
                 h[:,:, i] = H  
             H = h             
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.")
+            raise Exception(WARNINGIMAGESIZE)
 
     F = scipy.fft.fftn(img)
     #F = scipy.fft.fftshift(F)

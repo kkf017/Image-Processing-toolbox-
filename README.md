@@ -7,6 +7,6 @@ Toolbox to perform image processing.
 ### Manual
 * Run the command:
 ```bash
-python3 main.py /path/image.jpeg
+python3 main.py /path/input-image.jpeg /path/output-image.jpeg [OPT] [ARGS]
 ```
 

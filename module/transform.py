@@ -4,6 +4,8 @@ import numpy
 
 from typing import Tuple
 
+from colors import *
+
 
 def crop(img:numpy.ndarray, x:Tuple[float], width:int, height:int)->numpy.ndarray:
     """
@@ -17,10 +19,10 @@ def crop(img:numpy.ndarray, x:Tuple[float], width:int, height:int)->numpy.ndarra
     """
     y = numpy.copy(img)    
     if not(x[0]>=0 and x[0]<img.shape[0] and x[1]>=0 and x[1]<img.shape[1]):
-        raise Exception("\n[-]Error: Impossible to crop image.")
+        raise Exception(WARNINGCROPPING)
         sys.exit()
     if (x[0] + width > img.shape[0] or x[1] + height > img.shape[1]):
-        raise Exception("\n[-]Error: Impossible to crop image.")
+        raise Exception(WARNINGCROPPING)
         sys.exit()
     return y[x[0]:x[0]+width, x[1]:x[1]+height]
 
@@ -50,7 +52,7 @@ def downsampling(img:numpy.ndarray, fact:float)->numpy.ndarray:
         case 3:
             return img[::fact, ::fact, :]
         case _:
-            raise Exception("\n[-]Error: Unknown size of image.")                                                                                                                        
+            raise Exception(WARNINGIMAGESIZE)                                                                                                                        
 
 
 def upsampling(img:numpy.ndarray, fact:float)->numpy.ndarray:
