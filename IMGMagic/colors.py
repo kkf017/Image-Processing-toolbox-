@@ -24,9 +24,6 @@ WARNINGFILTER = "\n\033[{}m[-]Warning: Unknown type of filter.".format("0;33")
 WARNINGFTFILTER = "\n\033[{}m[-]Warning: Unknown type of filter.".format("0;33")
 
 
-# FIle args.py
-WARNINGPARSING = "\n\033[{}mWarning: Unvalid command.\n\n\033[{}mUse --help to list all available options.".format("0;33", "1;30")
-
 
 
 

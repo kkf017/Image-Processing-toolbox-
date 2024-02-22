@@ -4,8 +4,6 @@ import scipy
 
 from typing import Tuple, Any
 
-from colors import *
-
 
 def mse(x:numpy.ndarray, y: numpy.ndarray)->float:
     """
@@ -48,7 +46,7 @@ def GaussianNoise(img:numpy.ndarray, mean:float, sigma:float)->numpy.ndarray:
             x[:,:,1] += noise
             x[:,:,2] += noise
         case _:
-            raise Exception(WARNINGIMAGESIZE)
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33"))
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
 
@@ -91,6 +89,9 @@ def filterHighPass()->numpy.ndarray:
             filter
     """
     return 1/4*numpy.array([[0,-1,0],[-1,8,-1],[0,-1,0]])
+    #return numpy.array([[0,-1,0],[-1,4,-1],[0,-1,0]])
+    #return 1/16*numpy.array([[-1,-2,-1],[-2,12,-2],[-1,-2,-1]])
+    #return 1/9*numpy.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
    
 
 def filterBandreject()->numpy.ndarray:
@@ -229,7 +230,7 @@ def padding(img:numpy.ndarray, types:str, n:int)->numpy.ndarray:
         case "mirror":
             pass
         case _:
-            raise Exception(WARNINGPADDING)
+            raise Exception("\n\033[{}m[-]Warning: Unknown type of padding.".format("0;33"))
     x = x[img.shape[0]-n:2*img.shape[0]+n, img.shape[1]-n:2*img.shape[1]+n]
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
@@ -260,7 +261,7 @@ def convolution(img:numpy.ndarray, filters:numpy.ndarray, mode:str)->numpy.ndarr
                     new[:,:,i] = filters 
                 filters = new               
         case _:
-            raise Exception(WARNINGIMAGESIZE)
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33"))
 
     for i in range(n):
         for j in range(m):
@@ -301,7 +302,7 @@ def filtering(img:numpy.ndarray, types:str, mode:str, *args: Tuple[Any])->numpy.
         case "gauss":
             filters = filterGaussian() #int(args[0]))
         case _:
-            raise Exception(WARNINGFILTER)
+            raise Exception("\n\033[{}m[-]Warning: Unknown type of filter.".format("0;33"))
 
     #x = convolution(img, filters, mode)
 
@@ -313,7 +314,7 @@ def filtering(img:numpy.ndarray, types:str, mode:str, *args: Tuple[Any])->numpy.
             for i in range(img.shape[2]):
                 x[:,:,i] = scipy.ndimage.convolve(img[:,:,i], filters, mode=mode)
         case _:
-            raise Exception(WARNINGIMAGESIZE)
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33"))
   
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
@@ -338,7 +339,7 @@ def sharpening(img:numpy.ndarray, types:str, mode:str)->numpy.ndarray:
         case "roberts":
             filters = filterRoberts()
         case _:
-            raise Exception(WARNINGFILTER)
+            raise Exception("\n\033[{}m[-]Warning: Unknown type of filter.".format("0;33"))
     x = convolution(img, filters, mode)
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x

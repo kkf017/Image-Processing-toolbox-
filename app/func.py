@@ -1,19 +1,16 @@
 import os
-import sys
 import numpy
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-sys.path.insert(1, './module/')
+from app.command import *
 
-from command import *
-from display import *
-from transform import *
-from histogram import *
-from filter import *
-from FT import *
+from IMGMagic.display import *
+from IMGMagic.geometric import *
+from IMGMagic.histogram import *
+from IMGMagic.filter import *
+from IMGMagic.fourier import *
 
-from colors import *
 
 from typing import List
 
@@ -112,7 +109,7 @@ def main(argv:List[str], argc:int)->int:
             
             case "-fsh":
                 img1 = greyscale(img1)
-                img2 = LaplacianFilter(img1,-1) # float(args[0])
+                img2 = LaplacianFilter(img1,-1)#float(args[0]))
         
     plt.axis('off')
     match len(img2.shape):
@@ -121,10 +118,23 @@ def main(argv:List[str], argc:int)->int:
         case 3:
             plt.imshow(img2)
         case _:
-            raise Exception(WARNINGIMAGESIZE) 
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33")) 
     plt.savefig(filename2)
-    
+    #plt.show()
     return 1
+
+
+    # -
+        # High pass filter
+        # contrast adjustment 
+        # negative
+        # FT - Ideal low pass, Butterworth low pass, Gaussian low pass
+
+    # Extra tools - Laplacian pyramid, pyramid denoising, wavelet decomposition/denoising
+
+
+
+
 
 
 

@@ -4,8 +4,6 @@ import numpy
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-from colors import *
-
 
 def greyscale(x: numpy.ndarray)->numpy.ndarray:
     """
@@ -54,7 +52,7 @@ def display(x: numpy.ndarray, y:str)->None:
         case 3:
             plt.imshow(x)
         case _:
-            raise Exception(WARNINGIMAGESIZE) 
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33")) 
     plt.show()
 
 

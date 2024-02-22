@@ -1,16 +1,18 @@
 import os
 import sys
-import numpy
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 
-sys.path.insert(1, './module/')
-
-from func import main
-from colors import *
+from app.func import main
 
 from typing import List
 
+
+    # -
+        # High pass filter
+        # contrast adjustment 
+        # negative
+        # FT - Ideal low pass, Butterworth low pass, Gaussian low pass
+
+    # Extra tools - Laplacian pyramid, pyramid denoising, wavelet decomposition/denoising
 
 
 

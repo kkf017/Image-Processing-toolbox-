@@ -1,8 +1,6 @@
 import os
 import sys
 
-from colors import *
-
 from typing import List, Tuple, Union
 
 
@@ -42,7 +40,6 @@ def n(args:List[str])->bool:
         case _:
             return False
     return True
-
 
 def u(args:List[str])->bool:
     """
@@ -297,6 +294,10 @@ def check(argv:List[str])->Tuple[Union[str, List[str]]]:
         imgmagic img1 img2 [OPTION] [ARGS]
     """
 
+    # TERMINER !!! - add --help command
+	
+    WARNINGPARSING = "\n\033[{}mWarning: Unvalid command.\n\n\033[{}mUse --help to list all available options.".format("0;33", "1;30")
+
     filename1 = None
     filename2 = None
     opt = None
@@ -381,9 +382,11 @@ def check(argv:List[str])->Tuple[Union[str, List[str]]]:
 
 
 def help_()->None:
+    #print("\033[{}mIMGMagic 1.0.".format("1;35"))
     print("\n\033[{}mCommand:- imgmagic img1 img2 [OPTION] [ARGS]".format("0;34"))
     print("\033[{}m\t with img1 img2 path of input/output image.".format("0;34"))
 
+   
     print("\n\033[{}m-g \tConvert RGB image to greyscale.".format("0;37"))
 
     print("\n\033[{}m-n [noise] [args] \tAdd noise to image. \n\twith \t[noise]: type of noise (gauss, snp).\n\t\t[args]: arguments. \n\t\t\t\tmean, sigma for gaussian noise \n\t\t\t\tprob for salt and pepper noise".format("0;37"))
@@ -410,15 +413,15 @@ def help_()->None:
 
     print("\n\033[{}m-adj \tPerform contrast adjustment of the image.".format("0;37"))
 
-    print("\n\033[{}m-neg \tPerform image equalization.".format("0;37"))
+    print("\n\033[{}m-eq \tPerform image equalization.".format("0;37"))
 
-    print("\n\033[{}m-eq \tCompute negative of the image.".format("0;37"))
+    print("\n\033[{}m-neg \tCompute negative of the image.".format("0;37"))
 
     print("\n\033[{}m-gamma [c] [gamma] \tPerform gamma correction. \n\twith \t[c], [gamma]: parameters of gamma correction.".format("0;37"))
 
     print("\n\033[{}m-th \tPerform thresholding with Fourier transform.".format("0;37"))
 
-    print("\n\033[{}m-ftfilt [filter] [args] \tPerform FT filtering on image. \n\twith \t[filter]: type of filter (lowpass, blowpass, glowpass, highpass, bhighpass, ghighoass, bandreject, bandpass, homomorphic). \n\t\t[args]: arguments for each type of filter.".format("0;37"))
+    print("\n\033[{}m-ftfilt [filter] [args] \tPerform FT filtering on image. \n\twith \t[filter]: type of filter (lowpass, blowpass, glowpass, highpass, bhighpass, ghighpass, bandreject, bandpass, homomorphic). \n\t\t[args]: arguments for each type of filter.".format("0;37"))
 
     print("\n\033[{}m-umask [cutoff] [k] \tPerform unsharp masking. \n\twith \t[cutoff],[k]: parameters.".format("0;37"))
 
@@ -427,6 +430,7 @@ def help_()->None:
     print("\n\033[{}m-fsh [c] \tCompute FT laplacian. \n\twith \t[c]: constant.".format("0;37"))
 
 
+    #print("\n\033[{}mUse --help to list all available options.".format("1;30"))
  
 
 

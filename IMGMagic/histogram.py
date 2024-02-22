@@ -1,8 +1,6 @@
 import numpy
 import matplotlib.pyplot as plt
 
-from colors import *
-
 
 def histogram(img:numpy.ndarray, density:bool,)->None:
     """
@@ -25,7 +23,7 @@ def histogram(img:numpy.ndarray, density:bool,)->None:
                 ax[i].hist(counts, bins=unique, density=density) 
                 ax[i].set_title("Channel {}".format(channels[i]))
         case _:
-            raise Exception(WARNINGIMAGESIZE)
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33"))
     plt.show()
  
 
@@ -54,7 +52,7 @@ def adjustContrast(img:numpy.ndarray)->numpy.ndarray: # A REVOIR !!!
             x = f(img, numpy.min(unique), numpy.max(unique)) 
             """        
         case _:
-            raise Exception(WARNINGIMAGESIZE)
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33"))
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
 
@@ -80,7 +78,7 @@ def equalization(img:numpy.ndarray)->numpy.ndarray: # A REVOIR !!!
             for i in range(unique.shape[0]):
                 x[numpy.where(x==unique[i])] = const*numpy.sum(counts[:i])     
         case _:
-            raise Exception(WARNINGIMAGESIZE)
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33"))
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
 
@@ -121,7 +119,7 @@ def negative(img:numpy.ndarray)->numpy.ndarray:
                 unique, counts = numpy.unique(img[:,:,i], return_counts=True)
                 x[:,:,i] = f(img[:,:,i], numpy.min(unique))          
         case _:
-            raise Exception(WARNINGIMAGESIZE)
+            raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33"))
     x = numpy.clip(x, 0, 255).astype(numpy.uint8)
     return x
 
