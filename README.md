@@ -9,4 +9,9 @@ Toolbox to perform image processing.
 ```bash
 python3 main.py /path/input-image.jpeg /path/output-image.jpeg [OPT] [ARGS]
 ```
+ 
+```bash
+python3 main.py --help
+```
+
 
