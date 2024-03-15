@@ -1,7 +1,7 @@
 import os
 import sys
 
-from app.func import main
+from func import main
 
 from typing import List
 

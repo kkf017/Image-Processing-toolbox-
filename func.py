@@ -3,7 +3,7 @@ import numpy
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-from app.command import *
+from command import *
 
 from IMGMagic.display import *
 from IMGMagic.geometric import *
