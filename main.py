@@ -4,6 +4,8 @@ import numpy
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
+from PIL import Image
+
 from IMGMagic.display import *
 from IMGMagic.geometric import *
 from IMGMagic.histogram import *
@@ -13,14 +15,6 @@ from IMGMagic.fourier import *
 
 from typing import List, Union
 
-
-    # -
-        # High pass filter
-        # contrast adjustment 
-        # negative
-        # FT - Ideal low pass, Butterworth low pass, Gaussian low pass
-
-    # Extra tools - Laplacian pyramid, pyramid denoising, wavelet decomposition/denoising
 
 
 def main(argv:List[str], argc:int)->int:
@@ -39,11 +33,13 @@ def main(argv:List[str], argc:int)->int:
 		opt = None
 		args = []
 		
+		
 		if len(argv) < 3:
 			sys.exit("\n\033[{}mWARNING: Syntax error.\n\n\033[{}mUse --help to list all available options.".format("0;31", "1;30"))
-			
+				
 		if not exists(argv[1]):
 			sys.exit("\n\033[{}mWARNING: {} does not exist.\n\n\033[{}mUse --help to list all available options.".format("0;31", argv[1], "1;30"))
+		
 		
 		filename1 = argv[1]
 		filename2 = argv[2]
@@ -52,7 +48,7 @@ def main(argv:List[str], argc:int)->int:
 			opt = argv[3]
 			if len(argv) > 4:
 				args = argv[4:]
-		        
+				     
 		return filename1, filename2, opt, args    
 
 	if argc==1:
@@ -62,7 +58,7 @@ def main(argv:List[str], argc:int)->int:
 		_help_()
 		return 1
        
-	filename1, filename2, opt, args = check(sys.argv)
+	filename1, filename2, opt, args = check(argv)
 	
 	img1 = mpimg.imread(filename1)
 	img2 = numpy.copy(img1)
@@ -71,6 +67,11 @@ def main(argv:List[str], argc:int)->int:
 		match opt:
 			case "-g":
 				img2 = greyscale(img1)
+			case "-rgb":
+				img2 = numpy.zeros(img1.shape)
+				R, G, B = img1[:, :, 0], img1[:, :, 1], img1[:, :, 2]
+				img2[:,:,0] = R
+				img2 = numpy.clip(img2, 0, 255).astype(numpy.uint8)
 			case "-n":
 				match args[0]:
 					case "gauss":
@@ -136,7 +137,10 @@ def main(argv:List[str], argc:int)->int:
 				img2 = HighFreqEmph(img1, float(args[0]), float(args[1]), float(args[2]))
 			case "-fsh":
 				img1 = greyscale(img1)
-				img2 = LaplacianFilter(img1,-1)#float(args[0]))p
+				img2 = LaplacianFilter(img1,-1)#float(args[0]))
+				
+
+	"""
 	plt.axis('off')
 	match len(img2.shape):
 		case 2:
@@ -145,7 +149,15 @@ def main(argv:List[str], argc:int)->int:
 			plt.imshow(img2)
 		case _:
 			raise Exception("\n\033[{}m[-]Warning: Unknown size of image.".format("0;33")) 
+	
 	plt.savefig(filename2)
+	"""
+	
+	im = Image.fromarray(img2)
+	if len(img2.shape) == 2:
+		im = im.convert('L')
+	im.save(filename2)
+	
 	return 1
 
 
@@ -176,15 +188,13 @@ def _help_()->None:
     print("\n\033[{}m-fsh [c] \tCompute FT laplacian. \n\twith \t[c]: constant.".format("0;37"))
 
 
-    
+ 
 if __name__ == "__main__":
 	print("\033[{}mIMGMagic 1.0.".format("1;35"))
 	
 	main(sys.argv, len(sys.argv))
 	
 	print("\n\033[{}mUse --help to list all available options.".format("1;30"))
-
-
 
 
 

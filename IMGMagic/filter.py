@@ -360,8 +360,8 @@ def crosscorrelation(img:numpy.ndarray, filters:str, sub:numpy.ndarray)->numpy.n
 
     img = 0.2989 * img[:,:,0] + 0.5870 * img[:,:,1] + 0.1140 * img[:,:,2]
     sub = 0.2989 * sub[:,:,0] + 0.5870 * sub[:,:,1] + 0.1140 * sub[:,:,2]
-    img = sharpening(img, filters, "constant") 
-    sub = sharpening(sub, filters, "constant") 
+    img = sharpening(img, filters, "reflect") 
+    sub = sharpening(sub, filters, "reflect") 
 
     # padding
 
@@ -377,9 +377,17 @@ def crosscorrelation(img:numpy.ndarray, filters:str, sub:numpy.ndarray)->numpy.n
             result[i,j] = numpy.sum(corr)
             
             if numpy.max(result[index]) < numpy.max(result[i,j]):
-                index = (i,j)              
-  
-    return original[index[0]:index[0]+sub.shape[0], index[1]:index[1]+sub.shape[1]] 
+                index = (i,j)  
+    
+    N = 5
+    COLOR = numpy.array([255,0,127])
+    
+    find = numpy.copy(original[index[0]:index[0]+sub.shape[0], index[1]:index[1]+sub.shape[1]])    
+           
+    original[index[0]-N:index[0]+sub.shape[0]+N, index[1]-N:index[1]+sub.shape[1]+N] = COLOR 
+    original[index[0]:index[0]+sub.shape[0], index[1]:index[1]+sub.shape[1]] = find        
+    return original 
+    #return original[index[0]:index[0]+sub.shape[0], index[1]:index[1]+sub.shape[1]] 
 
 
 

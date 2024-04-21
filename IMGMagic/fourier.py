@@ -61,7 +61,7 @@ def hardthresholding(img:numpy.ndarray, threshold:float)->numpy.ndarray:
 
 
 
-def IdealLowPassFilter(img:numpy.ndarray, D0:float)->numpy.ndarray:
+def IdealHighPassFilter(img:numpy.ndarray, D0:float)->numpy.ndarray:
     """
         Function that returns an Ideal Lowpass filter.
         Input:
@@ -83,7 +83,7 @@ def IdealLowPassFilter(img:numpy.ndarray, D0:float)->numpy.ndarray:
                 H[u,v] = 0
     return H
 
-def ButterworthLowPassFilter(img:numpy.ndarray, D0:float, n:int)->numpy.ndarray:
+def ButterworthHighPassFilter(img:numpy.ndarray, D0:float, n:int)->numpy.ndarray:
     """
         Function that returns a Butterworth Lowpass filter.
         Input:
@@ -105,7 +105,7 @@ def ButterworthLowPassFilter(img:numpy.ndarray, D0:float, n:int)->numpy.ndarray:
            H[u,v] = Butterworth(u,v)
     return H
 
-def GaussianLowPassFilter(img:numpy.ndarray, sigma:float)->numpy.ndarray:
+def GaussianHighPassFilter(img:numpy.ndarray, sigma:float)->numpy.ndarray:
     """
         Function that returns an Gaussian Lowpass filter.
         Input:
@@ -125,7 +125,7 @@ def GaussianLowPassFilter(img:numpy.ndarray, sigma:float)->numpy.ndarray:
            H[u,v] = gaussian(u,v)
     return H
 
-def IdealHighPassFilter(img:numpy.ndarray, D0:float)->numpy.ndarray:
+def IdealLowPassFilter(img:numpy.ndarray, D0:float)->numpy.ndarray:
     """
         Function that returns an Ideal Highpass filter.
         Input:
@@ -147,7 +147,7 @@ def IdealHighPassFilter(img:numpy.ndarray, D0:float)->numpy.ndarray:
                 H[u,v] = 1
     return H
 
-def ButterworthHighPassFilter(img:numpy.ndarray, D0:float, n:int)->numpy.ndarray:
+def ButterworthLowPassFilter(img:numpy.ndarray, D0:float, n:int)->numpy.ndarray:
     """
         Function that returns a Butterworth Highpass filter.
         Input:
@@ -170,7 +170,7 @@ def ButterworthHighPassFilter(img:numpy.ndarray, D0:float, n:int)->numpy.ndarray
     return H
 
 
-def GaussianHighPassFilter(img:numpy.ndarray, sigma:float)->numpy.ndarray:
+def GaussianLowPassFilter(img:numpy.ndarray, sigma:float)->numpy.ndarray:
     """
         Function that returns an Gaussian Highpass filter.
         Input:
@@ -215,6 +215,8 @@ def HomomorphicFilter(img:numpy.ndarray, D0:int, Hgamma:float, Lgamma:float, c:f
            H[u,v] = (Hgamma-Lgamma) * (1-fgauss(u,v)) + Lgamma
     return H
 
+
+# H = BandrejectFilter(img, float(args[1]), float(args[2]), args[0], args[3:])
 def BandrejectFilter(img:numpy.ndarray, D0:float, W:float, filters:str, args:Tuple[Any])->numpy.ndarray:
     """
         Function that returns bandreject filter.
@@ -396,13 +398,13 @@ def ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])->numpy.ndarra
         case "lowpass":
             H = IdealLowPassFilter(img, float(args[0]))
         case "blowpass":
-            H = ButterworthLowPassFilter(img, float(args[0]), float(args[0]))
+            H = ButterworthLowPassFilter(img, float(args[0]), float(args[1]))
         case "glowpass":
             H = GaussianLowPassFilter(img, float(args[0]))
         case "highpass":
             H = IdealHighPassFilter(img, float(args[0]))
         case "bhighpass":
-            H = ButterworthHighPassFilter(img, float(args[0]), float(args[0]))
+            H = ButterworthHighPassFilter(img, float(args[0]), float(args[1]))
         case "ghighpass":
             H = GaussianHighPassFilter(img, float(args[0]))
         
