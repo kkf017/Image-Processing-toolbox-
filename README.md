@@ -2,7 +2,7 @@
 Toolbox to perform image processing.
 
 ### Libraries
-* Install numpy, scipy, matplotlib.
+* Install numpy, scipy, matplotlib, pillow.
 
 ### Manual
 * Run the command:
