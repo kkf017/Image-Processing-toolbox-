@@ -195,7 +195,7 @@ Function that performs Unsharp Masking and Highboost filtering.<br />
 &emsp;&emsp;&emsp;&emsp;&emsp; Image.<br />
 
 
-imgmagic.fourier.HighFreqEmph(img:numpy.ndarray, D0:int, k1:int, k2:int)<br />
+**imgmagic.fourier.HighFreqEmph(img:numpy.ndarray, D0:int, k1:int, k2:int)**<br />
 Function that performs High-frequency emphasis.<br />
 &emsp;&emsp; **Parameters**:<br />
 &emsp;&emsp;&emsp;&emsp; **img : numpy.ndarray**<br />
