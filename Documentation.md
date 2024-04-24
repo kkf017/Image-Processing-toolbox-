@@ -1,10 +1,6 @@
 # Image Processing
 Toolbox to perform image processing.
 
-### Libraries
-* Install numpy, scipy, matplotlib, pillow.
-
-
 ### Documentation
 
 **imgmagic.display.greyscale(x: numpy.ndarray)**<br />
