@@ -2,6 +2,7 @@
 Toolbox to perform image processing.
 
 ### Libraries
+* Requires python>=3.5.
 * Install numpy, scipy, matplotlib, pillow.
 
 ### Manual

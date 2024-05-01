@@ -1,7 +1,7 @@
 # Image Processing
 Toolbox to perform image processing.
 
-### Documentation
+### Documentationt
 **imgmagic.fourier.ftfiltering(img:numpy.ndarray, filters:str, *args: Tuple[Any])**<br />
 Function that perfoms sharpening on an image.<br />
 &emsp;&emsp; **Parameters**:<br />
