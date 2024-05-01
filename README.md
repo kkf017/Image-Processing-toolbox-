@@ -16,7 +16,7 @@ python3 main.py --help
 ```
 
 
-# IMGMagic Toolbox
+## IMGMagic Toolbox
 Toolbox to perform image processing.
 
 ### Example
