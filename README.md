@@ -15,6 +15,7 @@ python3 main.py /path/input-image.jpeg /path/output-image.jpeg [OPT] [ARGS]
 python3 main.py --help
 ```
 
+<br/>
 
 ## IMGMagic Toolbox
 Toolbox to perform image processing.
