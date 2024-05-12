@@ -37,7 +37,7 @@ if len(img2.shape) == 2:
 im.save("new.jpeg")
 ```
 
-#### Documentation
+### Documentation
 
 #### Display
 This module contains functions to **display** an image.
