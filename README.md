@@ -15,7 +15,9 @@ python3 main.py /path/input-image.jpeg /path/output-image.jpeg [OPT] [ARGS]
 python3 main.py --help
 ```
 
-### Example ###### (for IMGMagic toolbox)
+### IMGMagic toolbox
+#### Example 
+
 ```python
 import numpy
 import matplotlib.image as mpimg
@@ -35,7 +37,7 @@ if len(img2.shape) == 2:
 im.save("new.jpeg")
 ```
 
-### Documentation
+#### Documentation
 
 #### Display
 This module contains functions to **display** an image.
