@@ -16,7 +16,6 @@ python3 main.py --help
 ```
 
 ## IMGMagic toolbox
-%### Example 
 
 ```python
 import numpy
