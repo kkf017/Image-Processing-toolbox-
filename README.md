@@ -23,17 +23,18 @@ import matplotlib.image as mpimg
 from PIL import Image
 import imgmagic
 
+if __name__ == "__main__":
 	
-filename = "img.jpeg"
-img1 = mpimg.imread(filename)
-img2 = numpy.copy(img1)
+	filename = "img.jpeg"
+	img1 = mpimg.imread(filename)
+	img2 = numpy.copy(img1)
 
-img2 = imgmagic.display.greyscale(img1)
-	
-im = Image.fromarray(img2)
-if len(img2.shape) == 2:
-	im = im.convert('L')
-im.save("new.jpeg")
+	img2 = imgmagic.display.greyscale(img1)
+		
+	im = Image.fromarray(img2)
+	if len(img2.shape) == 2:
+		im = im.convert('L')
+	im.save("new.jpeg")
 ```
 
 ### Documentation
