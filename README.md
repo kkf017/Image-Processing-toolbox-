@@ -15,8 +15,8 @@ python3 main.py /path/input-image.jpeg /path/output-image.jpeg [OPT] [ARGS]
 python3 main.py --help
 ```
 
-### IMGMagic toolbox
-#### Example 
+## IMGMagic toolbox
+### Example 
 
 ```python
 import numpy
